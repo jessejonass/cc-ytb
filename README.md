@@ -48,6 +48,8 @@ npm run lint   # ESLint
 
 ## Deploy na Vercel
 
+> **O repositório no GitHub precisa ser privado.** Os backups gerados pelo workflow (artefato `favorites-backup`) contêm o id de cada usuário e todos os seus favoritos; num repositório público, qualquer pessoa pode baixá-los. Além disso, o GitHub desativa workflows agendados de repositórios públicos depois de 60 dias sem atividade, o que pararia o keep-alive.
+
 1. Em [vercel.com](https://vercel.com), **Add New → Project** e importe o repositório do GitHub.
 2. Defina as variáveis de ambiente: `TMDB_READ_TOKEN`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `NEXT_PUBLIC_SITE_URL=https://<projeto>.vercel.app`.
 3. Faça o deploy.
@@ -61,6 +63,8 @@ O workflow `.github/workflows/supabase-keepalive.yml` roda todos os dias às 09:
 - **backup**: usa `pg_dump` para exportar os dados de `public.favorites` em `favorites-AAAA-MM-DD.sql`.
 
 Os backups ficam em **Actions → execução do workflow → Artifacts** (artefato `favorites-backup`) e são mantidos por 30 dias.
+
+> **Mantenha o repositório privado.** Os artefatos de backup trazem o id e os favoritos de todos os usuários e, em repositórios públicos, podem ser baixados por qualquer pessoa. Em repositórios públicos o GitHub também desativa o agendamento (`schedule`) após 60 dias sem atividade no repositório.
 
 Secrets necessários em **Settings → Secrets and variables → Actions**:
 
