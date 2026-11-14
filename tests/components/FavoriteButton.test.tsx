@@ -89,6 +89,14 @@ describe('FavoriteButton', () => {
     expect(nav.replace).toHaveBeenCalledWith('/filme/550?a=1')
   })
 
+  it('favorito pendente com action lançando erro desfaz e mostra erro', async () => {
+    actions.addFavorite.mockRejectedValue(new Error('rede'))
+    setUrl('/filme/550?fav=550')
+    render(<FavoriteButton movie={m550} initialFavorited={false} isLoggedIn />)
+    expect(await screen.findByText('Não foi possível salvar. Tente de novo.')).toBeInTheDocument()
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false')
+  })
+
   it('pendente de outro filme não dispara', () => {
     setUrl('/filme/550?fav=999')
     render(<FavoriteButton movie={m550} initialFavorited={false} isLoggedIn />)

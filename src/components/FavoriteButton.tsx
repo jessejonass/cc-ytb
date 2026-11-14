@@ -28,12 +28,13 @@ export function FavoriteButton({
     const searchParams = new URLSearchParams(window.location.search)
     if (searchParams.get('fav') !== String(movie.movieId)) return
     setFavorited(true)
+    const revert = () => {
+      setFavorited(false)
+      setError(true)
+    }
     addFavorite(movie).then((r) => {
-      if (!r.ok) {
-        setFavorited(false)
-        setError(true)
-      }
-    })
+      if (!r.ok) revert()
+    }, revert)
     const rest = new URLSearchParams(searchParams)
     rest.delete('fav')
     const qs = rest.toString()

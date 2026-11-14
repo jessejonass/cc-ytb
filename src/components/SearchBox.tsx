@@ -2,10 +2,8 @@
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
-export default function SearchBox() {
-  const pathname = usePathname()
-  const params = useSearchParams()
-  const q = pathname === '/busca' ? (params.get('q') ?? '') : ''
+/** Formulário de busca sem hooks: usado também como fallback do Suspense (sem layout shift). */
+export function SearchForm({ q }: { q: string }) {
   return (
     <form action="/busca" method="get" role="search" className="w-full sm:w-64">
       <input
@@ -19,4 +17,11 @@ export default function SearchBox() {
       />
     </form>
   )
+}
+
+export default function SearchBox() {
+  const pathname = usePathname()
+  const params = useSearchParams()
+  const q = pathname === '/busca' ? (params.get('q') ?? '') : ''
+  return <SearchForm q={q} />
 }

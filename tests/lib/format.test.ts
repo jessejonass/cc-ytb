@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { formatRating, formatRuntime, releaseYear } from '@/lib/format'
+import { formatRating, formatRuntime, ratingLabel, releaseYear } from '@/lib/format'
+
+describe('ratingLabel', () => {
+  it('prefixa ★ só em nota numérica', () => {
+    expect(ratingLabel('8,1')).toBe('★ 8,1')
+    expect(ratingLabel('10,0')).toBe('★ 10,0')
+  })
+  it('"Sem nota" sai sem estrela; vazio vira null', () => {
+    expect(ratingLabel('Sem nota')).toBe('Sem nota')
+    expect(ratingLabel('')).toBeNull()
+  })
+})
 
 describe('formatRating', () => {
   it('formata com uma casa e vírgula', () => {

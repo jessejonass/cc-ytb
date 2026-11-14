@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import type { ReactNode } from 'react'
+import { ratingLabel } from '@/lib/format'
 import { imageUrl } from '@/lib/tmdb/client'
 import type { MovieCard } from '@/lib/tmdb/movies'
 
@@ -17,7 +18,7 @@ export function Hero({
   const src = imageUrl(movie.backdropPath, 'w1280')
   const meta = [
     movie.year,
-    movie.rating ? `★ ${movie.rating}` : null,
+    ratingLabel(movie.rating),
     movie.providerNames?.length ? movie.providerNames.join(', ') : null,
   ]
     .filter(Boolean)

@@ -43,7 +43,7 @@ npm run lint   # ESLint
 ## Configurando o Supabase
 
 1. Em **SQL Editor**, execute o conteúdo de `supabase/migrations/0001_favorites.sql` para criar a tabela `public.favorites` com suas políticas de acesso (RLS). Em seguida, execute `supabase/migrations/0002_favorites_limits.sql`, que adiciona os limites de tamanho e formato (título, pôster e ano). Rode as migrações nessa ordem.
-2. Em **Authentication → URL Configuration**, defina o Site URL (`http://localhost:3000` para desenvolvimento) e adicione `http://localhost:3000/auth/callback` às Redirect URLs.
+2. Em **Authentication → URL Configuration**, defina o Site URL (`http://localhost:3000` para desenvolvimento) e adicione `http://localhost:3000/**` às Redirect URLs.
 3. Em **Authentication → Providers**, habilite o **Google** com o Client ID e o Client Secret criados no Google Cloud Console. Use como URI de redirecionamento autorizado o callback exibido pelo Supabase. O login é apenas Google.
 
 ## Deploy na Vercel
@@ -53,13 +53,13 @@ npm run lint   # ESLint
 1. Em [vercel.com](https://vercel.com), **Add New → Project** e importe o repositório do GitHub.
 2. Defina as variáveis de ambiente: `TMDB_READ_TOKEN`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `NEXT_PUBLIC_SITE_URL=https://<projeto>.vercel.app`.
 3. Faça o deploy.
-4. No Supabase, em **Authentication → URL Configuration**, defina o Site URL como `https://<projeto>.vercel.app` e adicione `https://<projeto>.vercel.app/auth/callback` às Redirect URLs, mantendo as de localhost.
+4. No Supabase, em **Authentication → URL Configuration**, defina o Site URL como `https://<projeto>.vercel.app` e adicione `https://<projeto>.vercel.app/**` às Redirect URLs, mantendo `http://localhost:3000/**`.
 
 ## Keep-alive e backup dos favoritos
 
 O workflow `.github/workflows/supabase-keepalive.yml` roda todos os dias às 09:00 UTC (e pode ser disparado manualmente em **Actions → Supabase keep-alive e backup → Run workflow**). Ele tem dois jobs:
 
-- **keepalive**: faz uma requisição à API REST do Supabase para o projeto gratuito não ser pausado por inatividade.
+- **keepalive**: faz uma requisição ao health check do Supabase Auth (`/auth/v1/health`, com timeout de 30 s) para o projeto gratuito não ser pausado por inatividade.
 - **backup**: usa `pg_dump` para exportar os dados de `public.favorites` em `favorites-AAAA-MM-DD.sql`.
 
 Os backups ficam em **Actions → execução do workflow → Artifacts** (artefato `favorites-backup`) e são mantidos por 30 dias.

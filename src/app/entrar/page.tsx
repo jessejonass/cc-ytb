@@ -8,10 +8,11 @@ export const metadata = { title: 'Entrar — CINE' }
 export default async function EntrarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; erro?: string }>
+  searchParams: Promise<{ next?: string | string[]; erro?: string | string[] }>
 }) {
   const sp = await searchParams
-  const next = safeNextPath(sp.next)
+  // ?next=a&next=b chega como array: usa o primeiro
+  const next = safeNextPath(Array.isArray(sp.next) ? sp.next[0] : sp.next)
   if (await getCurrentUser()) redirect(next)
 
   return (

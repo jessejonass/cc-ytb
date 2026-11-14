@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
-import SearchBox from './SearchBox'
+import SearchBox, { SearchForm } from './SearchBox'
 import { signOut } from '@/app/actions/auth'
 
 type HeaderUser = { name: string; avatarUrl: string | null } | null
@@ -29,7 +29,7 @@ export default function Header({ user }: { user: HeaderUser }) {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-4">
-          <Suspense fallback={null}>
+          <Suspense fallback={<SearchForm q="" />}>
             <SearchBox />
           </Suspense>
           {user ? (

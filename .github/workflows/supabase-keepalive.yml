@@ -13,12 +13,12 @@ jobs:
     name: Keep-alive
     runs-on: ubuntu-latest
     steps:
-      - name: Ping na API REST do Supabase
+      - name: Ping no health check do Supabase Auth
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          curl -fsS "$SUPABASE_URL/rest/v1/" -H "apikey: $SUPABASE_ANON_KEY" -o /dev/null
+          curl -fsS --max-time 30 "$SUPABASE_URL/auth/v1/health" -H "apikey: $SUPABASE_ANON_KEY" -o /dev/null
 
   backup:
     name: Backup dos favoritos
@@ -26,7 +26,6 @@ jobs:
     steps:
       - name: Instalar postgresql-client 17 (repositório oficial PGDG)
         run: |
-          sudo apt-get install -y curl ca-certificates
           sudo install -d /usr/share/postgresql-common/pgdg
           sudo curl -fsS -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
           . /etc/os-release
@@ -39,8 +38,9 @@ jobs:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           set -euo pipefail
-          pg_dump "$SUPABASE_DB_URL" --table=public.favorites --data-only --column-inserts > "favorites-$(date +%F).sql"
-          test -s "favorites-$(date +%F).sql"
+          f="favorites-$(date +%F).sql"
+          pg_dump "$SUPABASE_DB_URL" --table=public.favorites --data-only --column-inserts > "$f"
+          test -s "$f"
 
       - name: Enviar backup como artefato
         uses: actions/upload-artifact@v4

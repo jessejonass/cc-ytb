@@ -25,4 +25,9 @@ describe('safeNextPath', () => {
     expect(safeNextPath(null)).toBe('/')
     expect(safeNextPath(undefined)).toBe('/')
   })
+  it('rejeita entradas que não são string (ex.: ?next=a&next=b vira array)', () => {
+    expect(safeNextPath(['/a', '/b'])).toBe('/')
+    expect(safeNextPath(42)).toBe('/')
+    expect(safeNextPath({})).toBe('/')
+  })
 })

@@ -1,13 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { AccessBadge } from '@/components/AccessBadge'
+import { ratingLabel } from '@/lib/format'
 import { imageUrl } from '@/lib/tmdb/client'
 import type { MovieCard } from '@/lib/tmdb/movies'
 
 export function PosterCard({ movie }: { movie: MovieCard }) {
   const src = imageUrl(movie.posterPath, 'w342')
   const kind = movie.kinds?.[0]
-  const meta = [movie.rating ? `★ ${movie.rating}` : null, movie.year].filter(Boolean)
+  const rating = ratingLabel(movie.rating)
+  const meta = [rating, movie.year].filter(Boolean)
   return (
     <Link
       href={`/filme/${movie.id}`}
@@ -36,8 +38,8 @@ export function PosterCard({ movie }: { movie: MovieCard }) {
       {src && <div className="mt-2 truncate text-sm font-medium">{movie.title}</div>}
       {meta.length > 0 && (
         <div className="text-xs text-muted">
-          {movie.rating && <span>{`★ ${movie.rating}`}</span>}
-          {movie.rating && movie.year && ' · '}
+          {rating && <span>{rating}</span>}
+          {rating && movie.year && ' · '}
           {movie.year && <span>{movie.year}</span>}
         </div>
       )}

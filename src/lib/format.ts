@@ -3,6 +3,16 @@ export function formatRating(voteAverage: number, voteCount: number): string {
   return voteAverage.toFixed(1).replace('.', ',')
 }
 
+export function isNumericRating(rating: string): boolean {
+  return /^\d+,\d$/.test(rating)
+}
+
+/** "8,1" → "★ 8,1"; "Sem nota" fica sem estrela; vazio → null. */
+export function ratingLabel(rating: string): string | null {
+  if (!rating) return null
+  return isNumericRating(rating) ? `★ ${rating}` : rating
+}
+
 export function formatRuntime(minutes: number | null): string | null {
   if (!minutes || minutes <= 0) return null
   const h = Math.floor(minutes / 60)

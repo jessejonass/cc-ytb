@@ -28,6 +28,12 @@ describe('Hero', () => {
     expect(screen.queryByText('undefined')).toBeNull()
   })
 
+  it('unrated shows "Sem nota" without the star', () => {
+    render(<Hero movie={card({ rating: 'Sem nota', year: '2021' })} />)
+    expect(screen.getByText('2021 · Sem nota')).toBeInTheDocument()
+    expect(screen.queryByText(/★/)).toBeNull()
+  })
+
   it('truncates long overview and renders favoriteSlot', () => {
     render(<Hero movie={card({ overview: 'a'.repeat(400) })} favoriteSlot={<button>Fav</button>} />)
     expect(screen.getByText(/^a+…$/).textContent!.length).toBeLessThanOrEqual(201)

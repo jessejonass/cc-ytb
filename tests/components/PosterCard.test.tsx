@@ -34,6 +34,12 @@ describe('PosterCard', () => {
     expect(screen.queryByText('Assinatura')).toBeNull()
   })
 
+  it('shows "Sem nota" without the star when unrated', () => {
+    render(<PosterCard movie={card({ rating: 'Sem nota' })} />)
+    expect(screen.getByText('Sem nota')).toBeInTheDocument()
+    expect(screen.queryByText(/★/)).toBeNull()
+  })
+
   it('has no star without rating', () => {
     render(<PosterCard movie={card({ rating: '' })} />)
     expect(screen.queryByText(/★/)).toBeNull()

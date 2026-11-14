@@ -1,5 +1,5 @@
-export function safeNextPath(next: string | null | undefined): string {
-  if (!next || !next.startsWith('/')) return '/'
+export function safeNextPath(next: unknown): string {
+  if (typeof next !== 'string' || !next.startsWith('/')) return '/'
   if (next.startsWith('//')) return '/'
   // control characters, whitespace and backslashes are stripped or rewritten by browsers
   if (/[\x00-\x1F\x7F\s\\]/.test(next)) return '/'

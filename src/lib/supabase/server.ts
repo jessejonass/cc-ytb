@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { cookies } from 'next/headers'
 import { unstable_rethrow } from 'next/navigation'
 import { createServerClient } from '@supabase/ssr'
@@ -28,7 +29,8 @@ export async function createServerSupabase() {
   )
 }
 
-export async function getCurrentUser(): Promise<{
+// cache(): uma única chamada a auth.getUser() por renderização
+export const getCurrentUser = cache(async function getCurrentUser(): Promise<{
   id: string
   name: string
   avatarUrl: string | null
@@ -49,4 +51,4 @@ export async function getCurrentUser(): Promise<{
     unstable_rethrow(e)
     return null
   }
-}
+})

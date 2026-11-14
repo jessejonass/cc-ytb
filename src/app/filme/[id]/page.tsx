@@ -5,6 +5,7 @@ import { FavoriteButton } from '@/components/FavoriteButton'
 import { MovieRow } from '@/components/MovieRow'
 import { WhereToWatch } from '@/components/WhereToWatch'
 import { getFavoriteIds } from '@/lib/favorites'
+import { isNumericRating } from '@/lib/format'
 import { getCurrentUser } from '@/lib/supabase/server'
 import { imageUrl } from '@/lib/tmdb/client'
 import { getMovieDetail } from '@/lib/tmdb/movies'
@@ -74,14 +75,17 @@ export default async function FilmePage({ params }: Props) {
           <div className="flex-1">
             <h1 className="font-display text-3xl font-bold sm:text-4xl">{movie.title}</h1>
             {meta.length > 0 && <p className="mt-2 text-muted">{meta.join(' · ')}</p>}
-            {movie.rating && (
-              <p className="mt-2">
-                <span className="font-semibold text-accent">{`★ ${movie.rating}`}</span>{' '}
-                <span className="text-sm text-muted">
-                  ({movie.voteCount.toLocaleString('pt-BR')} votos)
-                </span>
-              </p>
-            )}
+            {movie.rating &&
+              (isNumericRating(movie.rating) ? (
+                <p className="mt-2">
+                  <span className="font-semibold text-accent">{`★ ${movie.rating}`}</span>{' '}
+                  <span className="text-sm text-muted">
+                    ({movie.voteCount.toLocaleString('pt-BR')} votos)
+                  </span>
+                </p>
+              ) : (
+                <p className="mt-2 text-sm text-muted">{movie.rating}</p>
+              ))}
             {movie.directors.length > 0 && (
               <p className="mt-2 text-sm">
                 <span className="text-muted">Direção: </span>
