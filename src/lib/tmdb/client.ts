@@ -36,7 +36,7 @@ export async function tmdbFetch<T>(
 
 export function imageUrl(
   path: string | null,
-  size: 'w342' | 'w780' | 'w1280' | 'original',
+  size: 'w92' | 'w185' | 'w342' | 'w780' | 'w1280' | 'original',
 ): string | null {
   return path ? `${IMAGE_BASE_URL}/${size}${path}` : null
 }

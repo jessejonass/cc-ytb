@@ -52,5 +52,6 @@ describe('imageUrl', () => {
   })
   it('retorna null sem caminho', () => {
     expect(imageUrl(null, 'w342')).toBeNull()
+    expect(imageUrl('/a.jpg', 'w92')).toBe('https://image.tmdb.org/t/p/w92/a.jpg')
   })
 })
