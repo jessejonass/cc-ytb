@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { FavoriteButton } from '@/components/FavoriteButton'
 import { MovieRow } from '@/components/MovieRow'
 import { WhereToWatch } from '@/components/WhereToWatch'
+import { getFavoriteIds } from '@/lib/favorites'
+import { getCurrentUser } from '@/lib/supabase/server'
 import { imageUrl } from '@/lib/tmdb/client'
 import { getMovieDetail } from '@/lib/tmdb/movies'
 
@@ -34,6 +37,7 @@ export default async function FilmePage({ params }: Props) {
   const movie = await getMovieDetail(id)
   if (!movie) notFound()
 
+  const [user, favoriteIds] = await Promise.all([getCurrentUser(), getFavoriteIds()])
   const backdrop = imageUrl(movie.backdropPath, 'w1280')
   const poster = imageUrl(movie.posterPath, 'w780')
   const meta = [movie.year, movie.runtime, movie.genres.join(', ') || null].filter(Boolean)
@@ -98,7 +102,16 @@ export default async function FilmePage({ params }: Props) {
                   Ver trailer
                 </a>
               )}
-              <div data-slot="favorite" />
+              <FavoriteButton
+                movie={{
+                  movieId: movie.id,
+                  title: movie.title,
+                  posterPath: movie.posterPath,
+                  releaseYear: movie.year,
+                }}
+                initialFavorited={favoriteIds.has(movie.id)}
+                isLoggedIn={Boolean(user)}
+              />
             </div>
           </div>
         </div>
