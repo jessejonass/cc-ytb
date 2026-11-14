@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import SearchBox from './SearchBox'
 
@@ -27,7 +28,9 @@ export default function Header({ user }: { user: HeaderUser }) {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-4">
-          <SearchBox />
+          <Suspense fallback={null}>
+            <SearchBox />
+          </Suspense>
           {user ? (
             user.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
