@@ -1,0 +1,51 @@
+name: Supabase keep-alive e backup
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keepalive:
+    name: Keep-alive
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping na API REST do Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          curl -fsS "$SUPABASE_URL/rest/v1/" -H "apikey: $SUPABASE_ANON_KEY" -o /dev/null
+
+  backup:
+    name: Backup dos favoritos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar postgresql-client 17 (repositório oficial PGDG)
+        run: |
+          sudo apt-get install -y curl ca-certificates
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsS -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          . /etc/os-release
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-17
+
+      - name: Gerar dump da tabela favorites
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          pg_dump "$SUPABASE_DB_URL" --table=public.favorites --data-only --column-inserts > "favorites-$(date +%F).sql"
+          test -s "favorites-$(date +%F).sql"
+
+      - name: Enviar backup como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: favorites-backup
+          path: favorites-*.sql
+          retention-days: 30
+          if-no-files-found: error
