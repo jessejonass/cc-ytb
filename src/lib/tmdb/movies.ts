@@ -1,6 +1,7 @@
 import 'server-only'
 import { formatRating, formatRuntime, releaseYear } from '@/lib/format'
 import { summarizeAvailability, type AccessKind, type Availability } from '@/lib/tmdb/availability'
+import { buildDiscoverParams, type CatalogFilters } from '@/lib/tmdb/catalog'
 import { TmdbNotFoundError, tmdbFetch } from '@/lib/tmdb/client'
 import type {
   TmdbGenre,
@@ -169,4 +170,27 @@ export async function searchMovies(
     21600,
   )
   return { ...data, results: data.results.map((m) => toMovieCard(m)) }
+}
+
+export async function getBrProviders(): Promise<{ id: number; name: string }[]> {
+  const data = await tmdbFetch<{ results: TmdbProvider[] }>(
+    '/watch/providers/movie',
+    { watch_region: 'BR' },
+    WEEK,
+  )
+  return data.results.map((p) => ({ id: p.provider_id, name: p.provider_name }))
+}
+
+export async function discoverCatalog(f: CatalogFilters): Promise<TmdbPaged<MovieCard>> {
+  const ids = f.providers.length > 0 ? [] : await getBrProviderIds()
+  const data = await tmdbFetch<TmdbPaged<TmdbMovieSummary>>(
+    '/discover/movie',
+    buildDiscoverParams(f, ids),
+    21600,
+  )
+  return {
+    ...data,
+    total_pages: Math.min(data.total_pages, 500),
+    results: data.results.map((m) => toMovieCard(m)),
+  }
 }
