@@ -70,6 +70,25 @@ describe('getTrendingAvailable', () => {
     expect(r[0].kinds).toEqual(['flatrate'])
     expect(r[1].providerNames).toEqual(['Apple TV'])
   })
+
+  it('falha na consulta de um filme só descarta esse filme', async () => {
+    fetchMock.mockImplementation(async (path: string, params: Record<string, unknown>) => {
+      if (path === '/trending/movie/week') {
+        return params.page === 1
+          ? { page: 1, results: [summary(1), summary(2)], total_pages: 2, total_results: 3 }
+          : { page: 2, results: [summary(3)], total_pages: 2, total_results: 3 }
+      }
+      if (path === '/movie/2/watch/providers') throw new Error('TMDB 429')
+      return { results: { BR: { flatrate: [prov(8, 'Netflix')] } } }
+    })
+    const r = await getTrendingAvailable()
+    expect(r.map((c) => c.id)).toEqual([1, 3])
+  })
+
+  it('falha nas páginas de em alta ainda rejeita', async () => {
+    fetchMock.mockRejectedValue(new Error('TMDB 500'))
+    await expect(getTrendingAvailable()).rejects.toThrow('TMDB 500')
+  })
 })
 
 describe('pickHero', () => {

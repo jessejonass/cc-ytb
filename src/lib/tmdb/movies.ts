@@ -81,15 +81,20 @@ export async function getTrendingAvailable(limit = 20): Promise<MovieCard[]> {
     ),
   )
   const movies = pages.flatMap((p) => p.results)
+  // uma falha (429/5xx) num filme só descarta esse filme, não a lista toda
   const checked = await Promise.all(
     movies.map(async (m) => {
-      const data = await tmdbFetch<{ results: Record<string, TmdbWatchRegion> }>(
-        `/movie/${m.id}/watch/providers`,
-        {},
-        HOUR,
-      )
-      const availability = summarizeAvailability(data.results.BR)
-      return availability.available ? toMovieCard(m, availability) : null
+      try {
+        const data = await tmdbFetch<{ results: Record<string, TmdbWatchRegion> }>(
+          `/movie/${m.id}/watch/providers`,
+          {},
+          HOUR,
+        )
+        const availability = summarizeAvailability(data.results.BR)
+        return availability.available ? toMovieCard(m, availability) : null
+      } catch {
+        return null
+      }
     }),
   )
   return checked.filter((c): c is MovieCard => c !== null).slice(0, limit)
