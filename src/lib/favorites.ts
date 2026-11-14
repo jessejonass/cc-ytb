@@ -1,4 +1,5 @@
 import 'server-only'
+import { unstable_rethrow } from 'next/navigation'
 import { createServerSupabase, getCurrentUser } from '@/lib/supabase/server'
 import type { MovieCard } from '@/lib/tmdb/movies'
 
@@ -17,7 +18,8 @@ export async function getFavoriteIds(): Promise<Set<number>> {
     const { data, error } = await supabase.from('favorites').select('movie_id')
     if (error || !data) return new Set()
     return new Set((data as { movie_id: number }[]).map((r) => r.movie_id))
-  } catch {
+  } catch (e) {
+    unstable_rethrow(e)
     return new Set()
   }
 }
@@ -43,7 +45,8 @@ export async function listFavorites(): Promise<MovieCard[]> {
         rating: '',
       }),
     )
-  } catch {
+  } catch (e) {
+    unstable_rethrow(e)
     return []
   }
 }

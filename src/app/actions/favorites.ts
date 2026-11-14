@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { unstable_rethrow } from 'next/navigation'
 import { createServerSupabase, isSupabaseConfigured } from '@/lib/supabase/server'
 
 export type FavoriteMovie = {
@@ -18,7 +19,8 @@ async function currentSession() {
     const supabase = await createServerSupabase()
     const { data } = await supabase.auth.getUser()
     return data.user ? { supabase, userId: data.user.id } : null
-  } catch {
+  } catch (e) {
+    unstable_rethrow(e)
     return null
   }
 }

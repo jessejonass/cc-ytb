@@ -6,13 +6,15 @@ const nav = vi.hoisted(() => ({
   push: vi.fn(),
   replace: vi.fn(),
   pathname: '/filme/550',
-  search: '',
 }))
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: nav.push, replace: nav.replace }),
   usePathname: () => nav.pathname,
-  useSearchParams: () => new URLSearchParams(nav.search),
 }))
+
+function setUrl(url: string) {
+  window.history.replaceState(null, '', url)
+}
 
 const actions = vi.hoisted(() => ({ addFavorite: vi.fn(), removeFavorite: vi.fn() }))
 vi.mock('@/app/actions/favorites', () => actions)
@@ -23,7 +25,7 @@ describe('FavoriteButton', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     nav.pathname = '/filme/550'
-    nav.search = ''
+    setUrl('/filme/550')
   })
 
   it('deslogado vai para o login preservando a página e o favorito pendente', () => {
@@ -34,7 +36,7 @@ describe('FavoriteButton', () => {
   })
 
   it('mantém outros parâmetros da URL no next', () => {
-    nav.search = 'a=1'
+    setUrl('/filme/550?a=1')
     render(<FavoriteButton movie={m550} initialFavorited={false} isLoggedIn={false} />)
     fireEvent.click(screen.getByRole('button'))
     expect(nav.push).toHaveBeenCalledWith(
@@ -70,7 +72,7 @@ describe('FavoriteButton', () => {
 
   it('favorito pendente na URL chama addFavorite uma vez e limpa fav', async () => {
     actions.addFavorite.mockResolvedValue({ ok: true })
-    nav.search = 'fav=550'
+    setUrl('/filme/550?fav=550')
     render(<FavoriteButton movie={m550} initialFavorited={false} isLoggedIn />)
     await waitFor(() => expect(actions.addFavorite).toHaveBeenCalledTimes(1))
     expect(nav.replace).toHaveBeenCalledWith('/filme/550')
@@ -79,8 +81,16 @@ describe('FavoriteButton', () => {
     )
   })
 
+  it('favorito pendente preserva os outros parâmetros ao limpar fav', async () => {
+    actions.addFavorite.mockResolvedValue({ ok: true })
+    setUrl('/filme/550?a=1&fav=550')
+    render(<FavoriteButton movie={m550} initialFavorited={false} isLoggedIn />)
+    await waitFor(() => expect(actions.addFavorite).toHaveBeenCalledTimes(1))
+    expect(nav.replace).toHaveBeenCalledWith('/filme/550?a=1')
+  })
+
   it('pendente de outro filme não dispara', () => {
-    nav.search = 'fav=999'
+    setUrl('/filme/550?fav=999')
     render(<FavoriteButton movie={m550} initialFavorited={false} isLoggedIn />)
     expect(actions.addFavorite).not.toHaveBeenCalled()
   })

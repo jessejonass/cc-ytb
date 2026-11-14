@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { addFavorite, removeFavorite, type FavoriteMovie } from '@/app/actions/favorites'
 
 export function FavoriteButton({
@@ -15,7 +15,6 @@ export function FavoriteButton({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [favorited, setFavorited] = useState(initialFavorited)
   const [error, setError] = useState(false)
   const pendingHandled = useRef(false)
@@ -24,6 +23,8 @@ export function FavoriteButton({
     if (pendingHandled.current) return
     pendingHandled.current = true
     if (!isLoggedIn || initialFavorited) return
+    // lido do window (e não de useSearchParams) para não exigir Suspense no build
+    const searchParams = new URLSearchParams(window.location.search)
     if (searchParams.get('fav') !== String(movie.movieId)) return
     setFavorited(true)
     addFavorite(movie).then((r) => {
@@ -32,7 +33,7 @@ export function FavoriteButton({
         setError(true)
       }
     })
-    const rest = new URLSearchParams(searchParams.toString())
+    const rest = new URLSearchParams(searchParams)
     rest.delete('fav')
     const qs = rest.toString()
     router.replace(qs ? `${pathname}?${qs}` : pathname)
@@ -42,7 +43,7 @@ export function FavoriteButton({
 
   async function onClick() {
     if (!isLoggedIn) {
-      const params = new URLSearchParams(searchParams.toString())
+      const params = new URLSearchParams(window.location.search)
       params.set('fav', String(movie.movieId))
       router.push(`/entrar?next=${encodeURIComponent(`${pathname}?${params.toString()}`)}`)
       return

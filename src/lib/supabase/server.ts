@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+import { unstable_rethrow } from 'next/navigation'
 import { createServerClient } from '@supabase/ssr'
 
 export function isSupabaseConfigured(): boolean {
@@ -44,7 +45,8 @@ export async function getCurrentUser(): Promise<{
       name: (meta.full_name as string | undefined) || user.email || 'Usuário',
       avatarUrl: (meta.avatar_url as string | undefined) ?? null,
     }
-  } catch {
+  } catch (e) {
+    unstable_rethrow(e)
     return null
   }
 }
