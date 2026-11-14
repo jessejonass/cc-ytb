@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   buildCatalogUrl,
   buildDiscoverParams,
+  DECADES,
   parseCatalogFilters,
   parsePage,
   type CatalogFilters,
@@ -77,5 +78,17 @@ describe('buildCatalogUrl', () => {
     expect(
       buildCatalogUrl({ providers: [8], genres: [27], from: 1980, to: 1989, sort: 'nota', page: 2 }),
     ).toBe('/catalogo?servicos=8&generos=27&de=1980&ate=1989&ordem=nota&pagina=2')
+  })
+})
+
+describe('DECADES', () => {
+  it('cada atalho sobrevive ao ciclo URL -> parse', () => {
+    for (const d of DECADES) {
+      const url = buildCatalogUrl({ ...base, from: d.from, to: d.to })
+      const sp = Object.fromEntries(new URL(url, 'http://x').searchParams)
+      const parsed = parseCatalogFilters(sp)
+      expect(parsed.from).toBe(d.from)
+      expect(parsed.to).toBe(d.to)
+    }
   })
 })

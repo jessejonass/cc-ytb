@@ -4,21 +4,12 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
   buildCatalogUrl,
+  DECADES,
   type CatalogFilters as Filters,
   type CatalogSort,
 } from '@/lib/tmdb/catalog'
 
 type Named = { id: number; name: string }
-
-const DECADES: { label: string; from: number | null; to: number }[] = [
-  { label: '2020', from: 2020, to: 2029 },
-  { label: '2010', from: 2010, to: 2019 },
-  { label: '2000', from: 2000, to: 2009 },
-  { label: '1990', from: 1990, to: 1999 },
-  { label: '1980', from: 1980, to: 1989 },
-  { label: '1970', from: 1970, to: 1979 },
-  { label: 'Antes de 1970', from: null, to: 1969 },
-]
 
 function toggle(list: number[], id: number): number[] {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]

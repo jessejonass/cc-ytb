@@ -85,3 +85,14 @@ export function buildCatalogUrl(f: CatalogFilters): string {
   const qs = p.toString()
   return qs ? `/catalogo?${qs}` : '/catalogo'
 }
+
+// "to: null" na década atual: parseYear rejeita anos além do ano atual + 1.
+export const DECADES: { label: string; from: number | null; to: number | null }[] = [
+  { label: '2020', from: 2020, to: null },
+  { label: '2010', from: 2010, to: 2019 },
+  { label: '2000', from: 2000, to: 2009 },
+  { label: '1990', from: 1990, to: 1999 },
+  { label: '1980', from: 1980, to: 1989 },
+  { label: '1970', from: 1970, to: 1979 },
+  { label: 'Antes de 1970', from: null, to: 1969 },
+]
