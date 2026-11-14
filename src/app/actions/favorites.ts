@@ -3,9 +3,8 @@
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { createServerSupabase, isSupabaseConfigured } from '@/lib/supabase/server'
-import { validateFavoriteInput, type FavoriteMovie } from '@/lib/favorite-input'
-
-export type { FavoriteMovie }
+import { validateFavoriteInput } from '@/lib/favorite-input'
+import type { FavoriteMovie } from '@/lib/favorite-input'
 
 export type ActionResult = { ok: true } | { ok: false; error: 'unauthenticated' | 'failed' }
 

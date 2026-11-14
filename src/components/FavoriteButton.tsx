@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { addFavorite, removeFavorite, type FavoriteMovie } from '@/app/actions/favorites'
+import { addFavorite, removeFavorite } from '@/app/actions/favorites'
+import type { FavoriteMovie } from '@/lib/favorite-input'
 
 export function FavoriteButton({
   movie,
