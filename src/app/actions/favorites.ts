@@ -3,13 +3,9 @@
 import { revalidatePath } from 'next/cache'
 import { unstable_rethrow } from 'next/navigation'
 import { createServerSupabase, isSupabaseConfigured } from '@/lib/supabase/server'
+import { validateFavoriteInput, type FavoriteMovie } from '@/lib/favorite-input'
 
-export type FavoriteMovie = {
-  movieId: number
-  title: string
-  posterPath: string | null
-  releaseYear: string | null
-}
+export type { FavoriteMovie }
 
 export type ActionResult = { ok: true } | { ok: false; error: 'unauthenticated' | 'failed' }
 
@@ -28,23 +24,16 @@ async function currentSession() {
 export async function addFavorite(m: FavoriteMovie): Promise<ActionResult> {
   const session = await currentSession()
   if (!session) return { ok: false, error: 'unauthenticated' }
-  if (
-    !m ||
-    !Number.isInteger(m.movieId) ||
-    m.movieId <= 0 ||
-    typeof m.title !== 'string' ||
-    m.title.trim() === ''
-  ) {
-    return { ok: false, error: 'failed' }
-  }
+  const input = validateFavoriteInput(m)
+  if (!input) return { ok: false, error: 'failed' }
   try {
     const { error } = await session.supabase.from('favorites').upsert(
       {
         user_id: session.userId,
-        movie_id: m.movieId,
-        title: m.title,
-        poster_path: typeof m.posterPath === 'string' ? m.posterPath : null,
-        release_year: typeof m.releaseYear === 'string' ? m.releaseYear : null,
+        movie_id: input.movieId,
+        title: input.title,
+        poster_path: input.posterPath,
+        release_year: input.releaseYear,
       },
       { onConflict: 'user_id,movie_id', ignoreDuplicates: true },
     )
@@ -59,7 +48,9 @@ export async function addFavorite(m: FavoriteMovie): Promise<ActionResult> {
 export async function removeFavorite(movieId: number): Promise<ActionResult> {
   const session = await currentSession()
   if (!session) return { ok: false, error: 'unauthenticated' }
-  if (!Number.isInteger(movieId) || movieId <= 0) return { ok: false, error: 'failed' }
+  if (!Number.isInteger(movieId) || movieId <= 0 || movieId > 2147483647) {
+    return { ok: false, error: 'failed' }
+  }
   try {
     const { error } = await session.supabase
       .from('favorites')

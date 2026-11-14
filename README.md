@@ -42,7 +42,7 @@ npm run lint   # ESLint
 
 ## Configurando o Supabase
 
-1. Em **SQL Editor**, execute o conteúdo de `supabase/migrations/0001_favorites.sql` para criar a tabela `public.favorites` com suas políticas de acesso (RLS).
+1. Em **SQL Editor**, execute o conteúdo de `supabase/migrations/0001_favorites.sql` para criar a tabela `public.favorites` com suas políticas de acesso (RLS). Em seguida, execute `supabase/migrations/0002_favorites_limits.sql`, que adiciona os limites de tamanho e formato (título, pôster e ano). Rode as migrações nessa ordem.
 2. Em **Authentication → URL Configuration**, defina o Site URL (`http://localhost:3000` para desenvolvimento) e adicione `http://localhost:3000/auth/callback` às Redirect URLs.
 3. Em **Authentication → Providers**, habilite o **Google** com o Client ID e o Client Secret criados no Google Cloud Console. Use como URI de redirecionamento autorizado o callback exibido pelo Supabase. O login é apenas Google.
 
