@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import SearchBox from './SearchBox'
+import { signOut } from '@/app/actions/auth'
 
 type HeaderUser = { name: string; avatarUrl: string | null } | null
 
@@ -32,17 +33,24 @@ export default function Header({ user }: { user: HeaderUser }) {
             <SearchBox />
           </Suspense>
           {user ? (
-            user.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={user.avatarUrl} alt={user.name} className="h-8 w-8 rounded-full" />
-            ) : (
-              <span
-                title={user.name}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-panel text-sm"
-              >
-                {user.name.charAt(0).toUpperCase()}
-              </span>
-            )
+            <div className="flex items-center gap-3">
+              {user.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.avatarUrl} alt={user.name} className="h-8 w-8 rounded-full" />
+              ) : (
+                <span
+                  title={user.name}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-panel text-sm"
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <form action={signOut}>
+                <button type="submit" className="text-sm text-muted hover:text-fg">
+                  Sair
+                </button>
+              </form>
+            </div>
           ) : (
             <Link href="/entrar" className="text-sm text-accent hover:underline">
               Entrar
