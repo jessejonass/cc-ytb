@@ -10,10 +10,9 @@ export function RatingShortcuts({ ratings = [7, 8] }: { ratings?: number[] }) {
         <Link
           key={r}
           href={buildCatalogUrl({ ...defaults, minRating: r, sort: 'nota' })}
-          aria-label={`Filmes com nota ${r} ou mais`}
           className="rounded-full border border-white/15 px-2.5 py-0.5 text-xs font-medium text-fg/80 transition-colors hover:border-accent/70 hover:text-accent"
         >
-          {r}+
+          {r}+<span className="sr-only"> — filmes com nota {r} ou mais</span>
         </Link>
       ))}
     </div>
