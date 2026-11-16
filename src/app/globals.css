@@ -1,16 +1,152 @@
 @import "tailwindcss";
 
+/*
+ * CINE — "luz de projetor"
+ * Base veludo-noite, luz âmbar que esquenta até brasa. A cor de cada destaque
+ * vem do próprio filme (backdrop desfocado vazando por trás da página).
+ */
 @theme {
-  --color-bg: #121016;
-  --color-fg: #ece9f1;
-  --color-muted: #8e889a;
-  --color-panel: #1d1a23;
-  --color-accent: #e0a526;
-  --font-display: var(--font-archivo), sans-serif;
-  --font-sans: var(--font-inter), sans-serif;
+  --color-bg: #0d0a12; /* noite */
+  --color-panel: #1a1522; /* veludo */
+  --color-panel-2: #241d2e;
+  --color-fg: #f3eee6; /* marfim */
+  --color-muted: #a39cae; /* poeira */
+  --color-accent: #f4b33d; /* âmbar */
+  --color-ember: #e8572a; /* brasa */
+
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  --animate-kenburns: kenburns 22s ease-out both;
+  --animate-fill: fill var(--slide-ms, 8000ms) linear both;
+}
+
+/*
+ * `inline`: as variáveis do next/font vivem no <body>, não no :root. Sem inline,
+ * --font-display seria resolvida no :root (onde --font-shoulders não existe),
+ * ficaria inválida e o texto cairia na fonte do sistema.
+ */
+@theme inline {
+  --font-display: var(--font-shoulders), 'Arial Narrow', sans-serif;
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
+}
+
+:root {
+  --gutter: 1rem;
+  --header-h: 7.25rem;
+}
+@media (min-width: 640px) {
+  :root {
+    --gutter: 2rem;
+    --header-h: 4.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 3.5rem;
+  }
+}
+
+html {
+  scroll-padding-top: var(--header-h);
 }
 
 body {
   background: var(--color-bg);
   color: var(--color-fg);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1.12) translate3d(1.5%, 0, 0);
+  }
+  to {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* botão primário: o feixe do projetor, âmbar → brasa */
+@utility btn-light {
+  background-image: linear-gradient(100deg, var(--color-accent) 0%, #f08a33 55%, var(--color-ember) 100%);
+  color: #1a0f05;
+  box-shadow:
+    0 10px 30px -10px rgb(244 179 61 / 0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.35);
+}
+
+@utility glass {
+  background: rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+/* entrada orquestrada do destaque: só roda no slide ativo */
+.hero-copy > * {
+  opacity: 0;
+}
+[data-active='true'] .hero-copy > * {
+  animation: var(--animate-rise);
+}
+[data-active='true'] .hero-copy > *:nth-child(2) { animation-delay: 0.08s; }
+[data-active='true'] .hero-copy > *:nth-child(3) { animation-delay: 0.18s; }
+[data-active='true'] .hero-copy > *:nth-child(4) { animation-delay: 0.28s; }
+[data-active='true'] .hero-copy > *:nth-child(5) { animation-delay: 0.38s; }
+[data-active='true'] .hero-backdrop {
+  animation: var(--animate-kenburns);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-copy > * {
+    opacity: 1;
+  }
+  /* sem autoplay: a barra não "termina", o carrossel só muda por clique */
+  .hero-progress {
+    animation: none !important;
+  }
 }

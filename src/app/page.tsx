@@ -1,5 +1,6 @@
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { Hero } from '@/components/Hero'
+import { HeroCarousel } from '@/components/HeroCarousel'
 import { MovieRow } from '@/components/MovieRow'
 import { getFavoriteIds } from '@/lib/favorites'
 import { FEATURED_PROVIDERS } from '@/lib/providers'
@@ -8,11 +9,12 @@ import {
   getByProvider,
   getTopRated,
   getTrendingAvailable,
-  pickHero,
   type MovieCard,
 } from '@/lib/tmdb/movies'
 
 export const revalidate = 3600
+
+const HERO_COUNT = 5
 
 function valueOr(r: PromiseSettledResult<MovieCard[]>): MovieCard[] {
   return r.status === 'fulfilled' ? r.value : []
@@ -25,38 +27,60 @@ export default async function Home() {
     ...FEATURED_PROVIDERS.map((p) => getByProvider(p.id)),
   ])
   const trending = valueOr(trendingR)
-  const hero = pickHero(trending)
+  // a posição no ranking acompanha o slide, mesmo pulando filmes sem backdrop
+  const heroes = trending
+    .map((movie, i) => ({ movie, rank: i + 1 }))
+    .filter((h) => h.movie.backdropPath)
+    .slice(0, HERO_COUNT)
   const [user, favoriteIds] = await Promise.all([getCurrentUser(), getFavoriteIds()])
 
   return (
-    <div className="pb-12">
-      {hero && (
-        <Hero
-          movie={hero}
-          favoriteSlot={
-            <FavoriteButton
-              movie={{
-                movieId: hero.id,
-                title: hero.title,
-                posterPath: hero.posterPath,
-                releaseYear: hero.year,
-              }}
-              initialFavorited={favoriteIds.has(hero.id)}
-              isLoggedIn={Boolean(user)}
-            />
-          }
-        />
+    <div className="pb-16">
+      {heroes.length > 0 ? (
+        <div className="-mt-(--header-h)">
+          <HeroCarousel
+            slides={heroes.map(({ movie, rank }, i) => ({
+              key: movie.id,
+              title: movie.title,
+              node: (
+                <Hero
+                  movie={movie}
+                  rank={rank}
+                  priority={i === 0}
+                  favoriteSlot={
+                    <FavoriteButton
+                      size="lg"
+                      movie={{
+                        movieId: movie.id,
+                        title: movie.title,
+                        posterPath: movie.posterPath,
+                        releaseYear: movie.year,
+                      }}
+                      initialFavorited={favoriteIds.has(movie.id)}
+                      isLoggedIn={Boolean(user)}
+                    />
+                  }
+                />
+              ),
+            }))}
+          />
+        </div>
+      ) : (
+        <div className="h-8" />
       )}
-      <MovieRow title="Em alta na semana" movies={trending} />
-      <MovieRow title="Mais bem avaliados no streaming" movies={valueOr(topR)} />
-      {FEATURED_PROVIDERS.map((p, i) => (
-        <MovieRow
-          key={p.id}
-          title={p.rowTitle}
-          movies={valueOr(providerR[i])}
-          href={`/catalogo?servicos=${p.id}`}
-        />
-      ))}
+
+      <div className={`relative z-10 ${heroes.length > 0 ? '-mt-28 sm:-mt-36' : ''}`}>
+        <MovieRow title="Top 10 da semana" movies={trending} ranked />
+        <MovieRow title="Mais bem avaliados no streaming" movies={valueOr(topR)} />
+        {FEATURED_PROVIDERS.map((p, i) => (
+          <MovieRow
+            key={p.id}
+            title={p.rowTitle}
+            movies={valueOr(providerR[i])}
+            href={`/catalogo?servicos=${p.id}`}
+          />
+        ))}
+      </div>
     </div>
   )
 }

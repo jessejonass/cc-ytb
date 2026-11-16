@@ -1,0 +1,295 @@
+
+> cine@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.5.29 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://10.255.255.254:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled middleware in 312ms
+ ✓ Ready in 2s
+ ○ Compiling / ...
+ ✓ Compiled / in 6.2s
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 767ms
+ ○ Compiling /filme/[id] ...
+ ✓ Compiled /filme/[id] in 817ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1423191 200 in 1690ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 692ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1423191 200 in 732ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 2.2s
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 2654ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1423191 200 in 619ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 259ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 1233ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1423191 200 in 414ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 290ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/969681 200 in 1284ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1571955 200 in 821ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1084244 200 in 596ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 591ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/354912 200 in 658ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 497ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/672 200 in 675ms
+ ○ Compiling /catalogo ...
+ ✓ Compiled /catalogo in 611ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /catalogo 200 in 1226ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /catalogo?servicos=307 200 in 1421ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 561ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/1311031 200 in 651ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 555ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 1091ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 260ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/155 200 in 1501ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 412ms
+ ○ Compiling /favoritos ...
+ ✓ Compiled /favoritos in 598ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /favoritos 200 in 673ms
+ ○ Compiling /entrar ...
+ ✓ Compiled /entrar in 923ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /entrar?next=%2Ffavoritos 200 in 1004ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /entrar?next=%2Ffavoritos 200 in 75ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET / 200 in 352ms
+ ⚠ ./
+Failed to find font override values for font `Big Shoulders`
+Skipping generating a fallback font.
+
+
+ GET /filme/333339 200 in 659ms

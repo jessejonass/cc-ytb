@@ -9,10 +9,12 @@ export function FavoriteButton({
   movie,
   initialFavorited,
   isLoggedIn,
+  size = 'md',
 }: {
   movie: FavoriteMovie
   initialFavorited: boolean
   isLoggedIn: boolean
+  size?: 'md' | 'lg'
 }) {
   const router = useRouter()
   const pathname = usePathname()
@@ -65,19 +67,27 @@ export function FavoriteButton({
     }
   }
 
+  const pad = size === 'lg' ? 'px-6 py-3 text-[0.95rem]' : 'px-5 py-2.5 text-sm'
+
   return (
     <div className="inline-flex flex-col items-start gap-1">
       <button
         type="button"
         aria-pressed={favorited}
         onClick={onClick}
-        className={`rounded-md border px-4 py-2 text-sm font-semibold ${
-          favorited
-            ? 'border-accent bg-accent text-bg'
-            : 'border-muted hover:border-accent hover:text-accent'
+        className={`group inline-flex items-center gap-2 rounded-full glass font-semibold transition-[transform,background-color,border-color,color] hover:scale-[1.04] hover:bg-white/15 active:scale-95 ${pad} ${
+          favorited ? '!border-accent/70 text-accent' : 'text-fg'
         }`}
       >
-        {favorited ? '♥ Favoritado' : '♡ Favoritar'}
+        <span
+          aria-hidden
+          className={`text-lg leading-none transition-transform duration-300 ${
+            favorited ? 'scale-110 drop-shadow-[0_0_8px_rgb(244_179_61/0.8)]' : 'group-hover:scale-110'
+          }`}
+        >
+          {favorited ? '♥' : '♡'}
+        </span>{' '}
+        {favorited ? 'Favoritado' : 'Favoritar'}
       </button>
       {error && (
         <p role="alert" className="text-xs text-muted">

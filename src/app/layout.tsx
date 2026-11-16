@@ -1,12 +1,20 @@
 import type { Metadata } from 'next'
-import { Archivo, Inter } from 'next/font/google'
+import { Big_Shoulders, Instrument_Sans } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { getCurrentUser } from '@/lib/supabase/server'
 import './globals.css'
 
-const archivo = Archivo({ variable: '--font-archivo', subsets: ['latin'] })
-const inter = Inter({ variable: '--font-inter', subsets: ['latin'] })
+const shoulders = Big_Shoulders({
+  variable: '--font-shoulders',
+  subsets: ['latin'],
+  axes: ['opsz'],
+})
+const instrument = Instrument_Sans({
+  variable: '--font-instrument',
+  subsets: ['latin'],
+  axes: ['wdth'],
+})
 
 export const metadata: Metadata = {
   title: 'CINE — Catálogo de filmes',
@@ -17,9 +25,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const user = await getCurrentUser()
   return (
     <html lang="pt-BR">
-      <body className={`${archivo.variable} ${inter.variable} bg-bg font-sans text-fg antialiased`}>
+      <body
+        className={`${shoulders.variable} ${instrument.variable} bg-bg font-sans text-fg antialiased`}
+      >
         <Header user={user} />
-        <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
+        <main className="min-h-[70vh] overflow-x-clip pt-(--header-h)">{children}</main>
         <Footer />
       </body>
     </html>

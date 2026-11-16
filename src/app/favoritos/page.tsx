@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { PageHeader } from '@/components/PageHeader'
 import { PosterGrid } from '@/components/PosterGrid'
 import { listFavorites } from '@/lib/favorites'
 import { getCurrentUser } from '@/lib/supabase/server'
@@ -14,18 +15,26 @@ export default async function FavoritosPage() {
   const movies = await listFavorites()
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-[1680px] px-(--gutter) pb-16">
       {movies.length === 0 ? (
-        <div className="py-16 text-center">
-          <h1 className="mb-4 font-display text-2xl font-bold">Meus favoritos</h1>
-          <p className="text-muted">Você ainda não favoritou nenhum filme.</p>
-          <Link href="/" className="mt-4 inline-block text-accent hover:underline">
-            Ver a Vitrine
-          </Link>
-        </div>
+        <>
+          <PageHeader title="Meus favoritos" />
+          <div className="rounded-2xl border border-dashed border-white/10 px-6 py-20 text-center">
+            <p className="text-5xl text-accent/70" aria-hidden>
+              ♡
+            </p>
+            <p className="mt-4 text-fg/80">Você ainda não favoritou nenhum filme.</p>
+            <Link
+              href="/"
+              className="mt-6 inline-flex rounded-full btn-light px-6 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.04]"
+            >
+              Ver a Vitrine
+            </Link>
+          </div>
+        </>
       ) : (
         <>
-          <h1 className="mb-6 font-display text-2xl font-bold">{`Meus favoritos (${movies.length})`}</h1>
+          <PageHeader title={`Meus favoritos (${movies.length})`} />
           <PosterGrid movies={movies} emptyText="Você ainda não favoritou nenhum filme." />
         </>
       )}

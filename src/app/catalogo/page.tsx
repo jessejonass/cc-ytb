@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { CatalogFilters } from '@/components/CatalogFilters'
+import { PageHeader } from '@/components/PageHeader'
 import { Pagination } from '@/components/Pagination'
 import { PosterGrid } from '@/components/PosterGrid'
 import { FEATURED_PROVIDERS } from '@/lib/providers'
@@ -26,9 +27,11 @@ export default async function CatalogoPage({
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'))
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-      <h1 className="font-display text-3xl font-bold">Catálogo</h1>
-      <div className="mt-6 flex flex-col gap-6 md:flex-row">
+    <div className="mx-auto max-w-[1680px] px-(--gutter) pb-16">
+      <PageHeader title="Catálogo">
+        {result.total_results.toLocaleString('pt-BR')} filmes disponíveis no Brasil
+      </PageHeader>
+      <div className="mt-2 flex flex-col gap-6 md:flex-row md:gap-10">
         <CatalogFilters
           filters={filters}
           featured={FEATURED_PROVIDERS.map((p) => ({ id: p.id, name: p.name }))}
@@ -36,9 +39,6 @@ export default async function CatalogoPage({
           genres={genres}
         />
         <div className="min-w-0 flex-1">
-          <p className="mb-4 text-sm text-muted">
-            {result.total_results.toLocaleString('pt-BR')} filmes
-          </p>
           <PosterGrid
             movies={result.results}
             emptyText="Nenhum filme encontrado com esses filtros."

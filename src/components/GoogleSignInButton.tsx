@@ -14,7 +14,7 @@ export default function GoogleSignInButton({ next }: { next: string }) {
     <button
       type="button"
       onClick={signIn}
-      className="rounded bg-accent px-5 py-2.5 font-semibold text-bg hover:opacity-90"
+      className="w-full rounded-full btn-light px-6 py-3 font-semibold transition-transform hover:scale-[1.03] active:scale-95"
     >
       Entrar com Google
     </button>

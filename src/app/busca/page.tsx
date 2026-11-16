@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { PageHeader } from '@/components/PageHeader'
 import { Pagination } from '@/components/Pagination'
 import { PosterGrid } from '@/components/PosterGrid'
 import { parsePage } from '@/lib/tmdb/catalog'
@@ -21,9 +22,11 @@ export default async function BuscaPage({
 
   if (!q) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-        <h1 className="font-display text-3xl font-bold">Busca</h1>
-        <p className="py-16 text-center text-muted">Digite o nome de um filme</p>
+      <div className="mx-auto max-w-[1680px] px-(--gutter) pb-16">
+        <PageHeader title="Busca" />
+        <p className="rounded-2xl border border-dashed border-white/10 py-20 text-center text-muted">
+          Digite o nome de um filme
+        </p>
       </div>
     )
   }
@@ -31,9 +34,11 @@ export default async function BuscaPage({
   const result = await searchMovies(q, page)
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-      <h1 className="font-display text-3xl font-bold">Resultados para “{q}”</h1>
-      <div className="mt-6">
+    <div className="mx-auto max-w-[1680px] px-(--gutter) pb-16">
+      <PageHeader title={`Resultados para “${q}”`}>
+        {result.total_results.toLocaleString('pt-BR')} filmes encontrados
+      </PageHeader>
+      <div className="mt-2">
         <PosterGrid movies={result.results} emptyText={`Nenhum filme encontrado para “${q}”.`} />
         <Pagination
           page={page}
