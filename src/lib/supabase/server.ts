@@ -2,16 +2,17 @@ import { cache } from 'react'
 import { cookies } from 'next/headers'
 import { unstable_rethrow } from 'next/navigation'
 import { createServerClient } from '@supabase/ssr'
+import { supabaseKey } from './env'
 
 export function isSupabaseConfigured(): boolean {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && supabaseKey())
 }
 
 export async function createServerSupabase() {
   const cookieStore = await cookies()
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseKey()!,
     {
       cookies: {
         getAll() {

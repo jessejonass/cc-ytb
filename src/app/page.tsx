@@ -1,5 +1,6 @@
 import { FavoriteButton } from '@/components/FavoriteButton'
 import { Hero } from '@/components/Hero'
+import { HomeTabs } from '@/components/HomeTabs'
 import { HeroCarousel } from '@/components/HeroCarousel'
 import { MovieRow } from '@/components/MovieRow'
 import { RatingShortcuts } from '@/components/RatingShortcuts'
@@ -38,7 +39,11 @@ export default async function Home() {
   return (
     <div className="pb-16">
       {heroes.length > 0 ? (
-        <div className="-mt-(--header-h)">
+        <div className="relative -mt-(--header-h)">
+          {/* abas sobre o topo do destaque; o Hero reserva o espaço no padding do texto */}
+          <div className="absolute inset-x-0 top-[calc(var(--header-h)+1rem)] z-20">
+            <HomeTabs active="inicio" />
+          </div>
           <HeroCarousel
             slides={heroes.map(({ movie, rank }, i) => ({
               key: movie.id,
@@ -67,7 +72,9 @@ export default async function Home() {
           />
         </div>
       ) : (
-        <div className="h-8" />
+        <div className="pt-6 pb-2">
+          <HomeTabs active="inicio" />
+        </div>
       )}
 
       <div className={`relative z-10 ${heroes.length > 0 ? '-mt-28 sm:-mt-36' : ''}`}>

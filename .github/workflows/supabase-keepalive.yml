@@ -33,19 +33,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client-17
 
-      - name: Gerar dump da tabela favorites
+      - name: Gerar dump das tabelas favorites e watch_status
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
           set -euo pipefail
-          f="favorites-$(date +%F).sql"
-          pg_dump "$SUPABASE_DB_URL" --table=public.favorites --data-only --column-inserts > "$f"
+          f="backup-$(date +%F).sql"
+          pg_dump "$SUPABASE_DB_URL" --table=public.favorites --table=public.watch_status --data-only --column-inserts > "$f"
           test -s "$f"
 
       - name: Enviar backup como artefato
         uses: actions/upload-artifact@v4
         with:
-          name: favorites-backup
-          path: favorites-*.sql
+          name: supabase-backup
+          path: backup-*.sql
           retention-days: 30
           if-no-files-found: error

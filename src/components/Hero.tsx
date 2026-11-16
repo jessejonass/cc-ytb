@@ -55,7 +55,7 @@ export function Hero({
         <div aria-hidden className="absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,black_55%,transparent)] bg-[linear-gradient(90deg,var(--color-bg)_0%,rgb(13_10_18/0.88)_28%,rgb(13_10_18/0.25)_62%,transparent_100%)]" />
         <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-bg/70 to-transparent" />
 
-        <div className="hero-copy flex max-w-[44rem] flex-col gap-4 px-(--gutter) pt-[calc(var(--header-h)+1.5rem)] pb-44 sm:pb-48">
+        <div className="hero-copy flex max-w-[44rem] flex-col gap-4 px-(--gutter) pt-[calc(var(--header-h)+5rem)] pb-44 sm:pb-48">
           <p className="flex items-center gap-2.5 text-sm font-medium text-fg/85">
             <span className="rounded-md bg-gradient-to-br from-accent to-ember px-2 py-0.5 font-display text-base font-black text-bg">
               #{rank}

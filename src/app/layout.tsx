@@ -17,7 +17,7 @@ const instrument = Instrument_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'CINE — Catálogo de filmes',
+  title: 'CINE - Catálogo de filmes',
   description: 'Descubra filmes e onde assistir no Brasil.',
 }
 

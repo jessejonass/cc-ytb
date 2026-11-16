@@ -13,6 +13,8 @@ vi.mock('next/navigation', () => ({
 }))
 vi.mock('@/app/actions/favorites', () => ({ addFavorite: vi.fn(), removeFavorite: vi.fn() }))
 vi.mock('@/lib/favorites', () => ({ getFavoriteIds: async () => new Set<number>() }))
+vi.mock('@/app/actions/watch-status', () => ({ setWatchStatus: vi.fn(), clearWatchStatus: vi.fn() }))
+vi.mock('@/lib/watch-status', () => ({ getWatchStatus: async () => null }))
 vi.mock('@/lib/supabase/server', () => ({ getCurrentUser: async () => null }))
 vi.mock('@/lib/tmdb/movies', () => ({ getMovieDetail: async () => data.movie }))
 

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { isHomeTabPath } from '@/lib/home-tabs'
 
 const links = [
   { href: '/', label: 'Início' },
@@ -14,7 +15,8 @@ export function NavLinks() {
   return (
     <>
       {links.map((l) => {
-        const active = l.href === '/' ? pathname === '/' : pathname?.startsWith(l.href)
+        // "Início" cobre as três abas da inicial (Início, Quero assistir, Já assistidos)
+        const active = l.href === '/' ? isHomeTabPath(pathname) : pathname?.startsWith(l.href)
         return (
           <Link
             key={l.href}
