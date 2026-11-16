@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { supabaseKey } from './env'
 
 export async function updateSession(req: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request: req })
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const key = supabaseKey()
   if (!url || !key) return response
 
   const supabase = createServerClient(url, key, {
