@@ -32,12 +32,13 @@ describe('EmailAuthForm', () => {
     expect(senha).toHaveAttribute('autocomplete', 'new-password')
   })
 
-  it('mostra o erro devolvido pela action', async () => {
-    actions.signInWithEmail.mockResolvedValue({ error: 'E-mail ou senha incorretos.' })
+  it('mostra o erro devolvido pela action e mantém o e-mail digitado', async () => {
+    actions.signInWithEmail.mockResolvedValue({ error: 'E-mail ou senha incorretos.', email: 'a@x.com' })
     render(<EmailAuthForm next="/" />)
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'a@x.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'x' } })
     fireEvent.click(screen.getByRole('button', { name: 'Entrar' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('E-mail ou senha incorretos.')
+    expect(screen.getByLabelText('E-mail')).toHaveValue('a@x.com')
   })
 })

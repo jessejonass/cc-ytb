@@ -4,7 +4,7 @@ import { useActionState, useState } from 'react'
 import { signInWithEmail, signUpWithEmail, type AuthFormState } from '@/app/actions/auth'
 import { MIN_PASSWORD, type AuthMode } from '@/lib/credentials'
 
-const initial: AuthFormState = { error: null }
+const initial: AuthFormState = { error: null, email: '' }
 
 const input =
   'w-full rounded-xl border border-white/15 bg-panel px-4 py-3 text-sm text-fg placeholder:text-muted focus:border-accent/60 focus:outline-none'
@@ -20,7 +20,15 @@ function ModeForm({ mode, next }: { mode: AuthMode; next: string }) {
       <input type="hidden" name="next" value={next} />
       <label className="flex flex-col gap-1.5 text-sm font-medium text-fg/80">
         E-mail
-        <input name="email" type="email" required autoComplete="email" className={input} />
+        {/* o React 19 limpa o formulário após a action; defaultValue reexibe o e-mail digitado */}
+        <input
+          name="email"
+          type="email"
+          required
+          autoComplete="email"
+          defaultValue={state.email}
+          className={input}
+        />
       </label>
       <div className="flex flex-col gap-1.5">
         <label className="flex flex-col gap-1.5 text-sm font-medium text-fg/80">

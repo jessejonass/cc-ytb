@@ -26,7 +26,10 @@ function fd(fields: Record<string, string>): FormData {
   return f
 }
 
-const empty = { error: null }
+const empty = { error: null, email: '' }
+const NEEDS_CONFIRM =
+  'Sua conta precisa de confirmação por e-mail. Desligue "Confirm email" no Supabase (Authentication → Sign In / Providers → Email).'
+const err = (error: string) => ({ error, email: 'a@x.com' })
 
 describe('signInWithEmail', () => {
   beforeEach(() => {
@@ -49,25 +52,43 @@ describe('signInWithEmail', () => {
     ).rejects.toThrow(/^REDIRECT:\/$/)
   })
 
-  it('login inválido', async () => {
+  it('credenciais inválidas', async () => {
     sb.signInWithPassword.mockResolvedValue({ error: { code: 'invalid_credentials' } })
-    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual({
-      error: 'E-mail ou senha incorretos.',
-    })
+    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual(
+      err('E-mail ou senha incorretos.'),
+    )
   })
 
-  it('exceção do Supabase vira erro de login', async () => {
+  it('e-mail não confirmado tem mensagem própria', async () => {
+    sb.signInWithPassword.mockResolvedValue({ error: { code: 'email_not_confirmed' } })
+    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual(err(NEEDS_CONFIRM))
+  })
+
+  it('outros erros (ex.: limite de tentativas) não dizem que a senha está errada', async () => {
+    sb.signInWithPassword.mockResolvedValue({ error: { code: 'over_request_rate_limit' } })
+    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual(
+      err('Não foi possível entrar. Tente de novo.'),
+    )
+  })
+
+  it('exceção do Supabase vira erro genérico', async () => {
     sb.signInWithPassword.mockRejectedValue(new Error('rede'))
-    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual({
-      error: 'E-mail ou senha incorretos.',
-    })
+    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual(
+      err('Não foi possível entrar. Tente de novo.'),
+    )
+  })
+
+  it('devolve o e-mail digitado (normalizado) para o formulário não apagá-lo', async () => {
+    sb.signInWithPassword.mockResolvedValue({ error: { code: 'invalid_credentials' } })
+    expect((await signInWithEmail(empty, fd({ email: ' A@X.com ', password: 'x' }))).email).toBe('a@x.com')
+    expect((await signInWithEmail(empty, fd({ email: 'ana', password: 'x' }))).email).toBe('ana')
   })
 
   it('Supabase não configurado', async () => {
     sb.configured = false
-    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual({
-      error: 'Login indisponível: configure o Supabase.',
-    })
+    expect(await signInWithEmail(empty, fd({ email: 'a@x.com', password: 'x' }))).toEqual(
+      err('Login indisponível: configure o Supabase.'),
+    )
   })
 })
 
@@ -79,16 +100,23 @@ describe('signUpWithEmail', () => {
 
   it('cadastro com e-mail existente', async () => {
     sb.signUp.mockResolvedValue({ data: {}, error: { code: 'user_already_exists' } })
-    expect(await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '12345678' }))).toEqual({
-      error: 'Este e-mail já tem conta.',
-    })
+    expect(await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '12345678' }))).toEqual(
+      err('Este e-mail já tem conta.'),
+    )
   })
 
   it('outro erro no cadastro', async () => {
     sb.signUp.mockResolvedValue({ data: {}, error: { code: 'unexpected_failure' } })
-    expect(await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '12345678' }))).toEqual({
-      error: 'Não foi possível criar a conta. Tente de novo.',
-    })
+    expect(await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '12345678' }))).toEqual(
+      err('Não foi possível criar a conta. Tente de novo.'),
+    )
+  })
+
+  it('cadastro sem sessão (confirmação ligada) avisa em vez de fingir sucesso', async () => {
+    sb.signUp.mockResolvedValue({ data: { user: {}, session: null }, error: null })
+    expect(
+      await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '12345678', next: '/' })),
+    ).toEqual(err(NEEDS_CONFIRM))
   })
 
   it('cadastro ok redireciona', async () => {
@@ -100,9 +128,9 @@ describe('signUpWithEmail', () => {
   })
 
   it('validação falha não chama o Supabase', async () => {
-    expect(await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '1' }))).toEqual({
-      error: 'A senha precisa ter pelo menos 8 caracteres.',
-    })
+    expect(await signUpWithEmail(empty, fd({ email: 'a@x.com', password: '1' }))).toEqual(
+      err('A senha precisa ter pelo menos 8 caracteres.'),
+    )
     expect(sb.signUp).not.toHaveBeenCalled()
   })
 })
