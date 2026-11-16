@@ -71,12 +71,9 @@ export default async function Home() {
       )}
 
       <div className={`relative z-10 ${heroes.length > 0 ? '-mt-28 sm:-mt-36' : ''}`}>
+        <RatingShortcuts />
         <MovieRow title="Top 10 da semana" movies={trending} ranked />
-        <MovieRow
-          title="Mais bem avaliados no streaming"
-          movies={valueOr(topR)}
-          action={<RatingShortcuts />}
-        />
+        <MovieRow title="Mais bem avaliados no streaming" movies={valueOr(topR)} />
         {FEATURED_PROVIDERS.map((p, i) => (
           <MovieRow
             key={p.id}
