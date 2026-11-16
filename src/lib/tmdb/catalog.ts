@@ -6,6 +6,7 @@ export type CatalogFilters = {
   genres: number[]
   from: number | null
   to: number | null
+  minRating: number | null
   sort: CatalogSort
   page: number
 }
@@ -14,8 +15,16 @@ type SearchParams = Record<string, string | string[] | undefined>
 
 const SORTS: CatalogSort[] = ['popularidade', 'nota', 'lancamento']
 
+/** Notas mínimas aceitas em ?nota= (com piso de votos no discover). */
+export const MIN_RATINGS = [6, 7, 8] as const
+
 function first(v: string | string[] | undefined): string | undefined {
   return Array.isArray(v) ? v[0] : v
+}
+
+function parseMinRating(v: string | string[] | undefined): number | null {
+  const raw = first(v)
+  return MIN_RATINGS.find((r) => String(r) === raw) ?? null
 }
 
 function parseIds(v: string | string[] | undefined): number[] {
@@ -49,6 +58,7 @@ export function parseCatalogFilters(sp: SearchParams): CatalogFilters {
     genres: parseIds(sp.generos),
     from: parseYear(sp.de),
     to: parseYear(sp.ate),
+    minRating: parseMinRating(sp.nota),
     sort: SORTS.find((s) => s === ordem) ?? 'popularidade',
     page: parsePage(sp.pagina),
   }
@@ -65,11 +75,11 @@ export function buildDiscoverParams(
   if (f.genres.length > 0) params.with_genres = f.genres.join('|')
   if (f.from !== null) params['primary_release_date.gte'] = `${f.from}-01-01`
   if (f.to !== null) params['primary_release_date.lte'] = `${f.to}-12-31`
+  if (f.minRating !== null) params['vote_average.gte'] = f.minRating
+  if (f.minRating !== null || f.sort === 'nota') params['vote_count.gte'] = 100
   if (f.sort === 'popularidade') params.sort_by = 'popularity.desc'
-  else if (f.sort === 'nota') {
-    params.sort_by = 'vote_average.desc'
-    params['vote_count.gte'] = 100
-  } else params.sort_by = 'primary_release_date.desc'
+  else if (f.sort === 'nota') params.sort_by = 'vote_average.desc'
+  else params.sort_by = 'primary_release_date.desc'
   params.page = f.page
   return params
 }
@@ -80,6 +90,7 @@ export function buildCatalogUrl(f: CatalogFilters): string {
   if (f.genres.length) p.set('generos', f.genres.join(','))
   if (f.from !== null) p.set('de', String(f.from))
   if (f.to !== null) p.set('ate', String(f.to))
+  if (f.minRating !== null) p.set('nota', String(f.minRating))
   if (f.sort !== 'popularidade') p.set('ordem', f.sort)
   if (f.page > 1) p.set('pagina', String(f.page))
   const qs = p.toString()
