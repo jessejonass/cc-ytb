@@ -5,11 +5,18 @@ import { useState } from 'react'
 import {
   buildCatalogUrl,
   DECADES,
+  MIN_RATINGS,
   type CatalogFilters as Filters,
   type CatalogSort,
 } from '@/lib/tmdb/catalog'
 
 type Named = { id: number; name: string }
+
+function chipClass(active: boolean): string {
+  return `rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+    active ? 'border-transparent btn-light' : 'border-white/15 text-fg/80 hover:border-accent/70 hover:text-fg'
+  }`
+}
 
 function toggle(list: number[], id: number): number[] {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
@@ -73,11 +80,27 @@ export function CatalogFilters({
               onClick={() =>
                 active ? update({ from: null, to: null }) : update({ from: d.from, to: d.to })
               }
-              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                active ? 'border-transparent btn-light' : 'border-white/15 text-fg/80 hover:border-accent/70 hover:text-fg'
-              }`}
+              className={chipClass(active)}
             >
               {d.label}
+            </button>
+          )
+        })}
+      </div>
+
+      <h3 className={heading}>Nota mínima</h3>
+      <div className="flex flex-wrap gap-2">
+        {MIN_RATINGS.map((r) => {
+          const active = filters.minRating === r
+          return (
+            <button
+              key={r}
+              type="button"
+              aria-pressed={active}
+              onClick={() => update({ minRating: active ? null : r })}
+              className={chipClass(active)}
+            >
+              {r}+
             </button>
           )
         })}
