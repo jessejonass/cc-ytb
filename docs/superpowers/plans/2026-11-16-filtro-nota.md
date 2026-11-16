@@ -224,3 +224,20 @@ git add src/components/RatingShortcuts.tsx tests/components/RatingShortcuts.test
 git add src/components/MovieRow.tsx src/app/page.tsx   # idem
 git commit -m "feat(home): atalhos de nota mínima para o catálogo"
 ```
+
+---
+
+## Revisão 2026-11-16: 9+ e barra de notas na inicial
+
+O usuário não percebeu os chips ao lado do trilho e pediu uma barra própria na inicial (sem filtrar a inicial) e o 9+. Ver o spec atualizado.
+
+### Task 4: 9+ em `MIN_RATINGS`
+
+- [ ] Testes primeiro em `tests/lib/tmdb/catalog.test.ts`: `MIN_RATINGS` igual a `[6, 7, 8, 9]`; `nota: '9'` → `9`; trocar `'9'` por `'5'` nas listas de inválidos. Em `tests/components/CatalogFilters.test.tsx`, esperar `6+ 7+ 8+ 9+`. Ver falhar.
+- [ ] `MIN_RATINGS = [6, 7, 8, 9] as const` e exportar `type MinRating = (typeof MIN_RATINGS)[number]`; `CatalogFilters.minRating: MinRating | null`. Ver passar + `tsc`. Commit.
+
+### Task 5: Barra "Explorar por nota" na inicial
+
+- [ ] Reescrever `tests/components/RatingShortcuts.test.tsx`: um `<nav>` com nome acessível "Explorar por nota", texto visível "Explorar por nota", 4 links cujo nome começa por `6+`…`9+` com href `/catalogo?nota=X&ordem=nota`. Ver falhar.
+- [ ] `RatingShortcuts({ ratings = MIN_RATINGS }: { ratings?: readonly MinRating[] })` renderiza a barra com padding `px-(--gutter)`, chips com alvo de toque ≥ 32px. Em `page.tsx`, renderizar a barra no topo do bloco dos trilhos (antes do Top 10) e tirar o `action` do trilho "Mais bem avaliados"; remover a prop `action` de `MovieRow` (fica sem uso).
+- [ ] `npm test`, `tsc`, `lint`, conferir no app. Commit.

@@ -36,7 +36,7 @@ describe('parseCatalogFilters', () => {
   })
   it('descarta valores inválidos', () => {
     expect(
-      parseCatalogFilters({ servicos: '8,abc,119', generos: 'x', de: '3000', ate: '1989', nota: '9', ordem: 'xyz', pagina: '9999' }),
+      parseCatalogFilters({ servicos: '8,abc,119', generos: 'x', de: '3000', ate: '1989', nota: '5', ordem: 'xyz', pagina: '9999' }),
     ).toEqual({ providers: [8, 119], genres: [], from: null, to: 1989, minRating: null, sort: 'popularidade', page: 500 })
   })
   it('limita página', () => {
@@ -46,10 +46,11 @@ describe('parseCatalogFilters', () => {
   })
   it('lê nota mínima válida', () => {
     expect(parseCatalogFilters({ nota: '7' }).minRating).toBe(7)
+    expect(parseCatalogFilters({ nota: '9' }).minRating).toBe(9)
     expect(parseCatalogFilters({ nota: ['8', '6'] }).minRating).toBe(8)
   })
   it('descarta notas inválidas', () => {
-    for (const nota of ['7.5', '10', '9', '0', 'abc', '', '-7', '07']) {
+    for (const nota of ['7.5', '10', '5', '0', 'abc', '', '-7', '07']) {
       expect(parseCatalogFilters({ nota }).minRating).toBeNull()
     }
   })
@@ -126,7 +127,7 @@ describe('DECADES', () => {
 
 describe('MIN_RATINGS', () => {
   it('cada nota sobrevive ao ciclo URL -> parse', () => {
-    expect(MIN_RATINGS).toEqual([6, 7, 8])
+    expect(MIN_RATINGS).toEqual([6, 7, 8, 9])
     for (const r of MIN_RATINGS) {
       const url = buildCatalogUrl({ ...base, minRating: r })
       const sp = Object.fromEntries(new URL(url, 'http://x').searchParams)

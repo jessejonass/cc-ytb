@@ -6,7 +6,7 @@ export type CatalogFilters = {
   genres: number[]
   from: number | null
   to: number | null
-  minRating: number | null
+  minRating: MinRating | null
   sort: CatalogSort
   page: number
 }
@@ -16,13 +16,14 @@ type SearchParams = Record<string, string | string[] | undefined>
 const SORTS: CatalogSort[] = ['popularidade', 'nota', 'lancamento']
 
 /** Notas mínimas aceitas em ?nota= (com piso de votos no discover). */
-export const MIN_RATINGS = [6, 7, 8] as const
+export const MIN_RATINGS = [6, 7, 8, 9] as const
+export type MinRating = (typeof MIN_RATINGS)[number]
 
 function first(v: string | string[] | undefined): string | undefined {
   return Array.isArray(v) ? v[0] : v
 }
 
-function parseMinRating(v: string | string[] | undefined): number | null {
+function parseMinRating(v: string | string[] | undefined): MinRating | null {
   const raw = first(v)
   return MIN_RATINGS.find((r) => String(r) === raw) ?? null
 }

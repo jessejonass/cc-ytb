@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { buildCatalogUrl, parseCatalogFilters } from '@/lib/tmdb/catalog'
+import { buildCatalogUrl, parseCatalogFilters, type MinRating } from '@/lib/tmdb/catalog'
 
 /** Atalhos da inicial para o Catálogo filtrado por nota mínima e ordenado por nota. */
-export function RatingShortcuts({ ratings = [7, 8] }: { ratings?: number[] }) {
+export function RatingShortcuts({ ratings = [7, 8] }: { ratings?: readonly MinRating[] }) {
   const defaults = parseCatalogFilters({})
   return (
     <div className="flex items-center gap-1.5">

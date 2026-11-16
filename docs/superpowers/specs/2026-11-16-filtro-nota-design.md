@@ -32,20 +32,22 @@ Refinar a busca do site: além de ordenar por nota (já existe), poder **cortar*
 
 **URL e parsing** ([src/lib/tmdb/catalog.ts](../../../src/lib/tmdb/catalog.ts))
 - Novo campo `minRating: number | null` em `CatalogFilters`, no parâmetro `?nota=`.
-- Valores aceitos: `6`, `7`, `8`. Qualquer outro valor é ignorado (vira `null`), como já acontece com os outros filtros.
+- Valores aceitos: `6`, `7`, `8`, `9`. Qualquer outro valor é ignorado (vira `null`), como já acontece com os outros filtros.
 - `buildCatalogUrl` grava `nota` quando houver valor. `buildDiscoverParams` envia `vote_average.gte=<nota>` e `vote_count.gte=100` (o mesmo piso de votos que a ordenação por nota já usa).
 
 **Painel do Catálogo** ([src/components/CatalogFilters.tsx](../../../src/components/CatalogFilters.tsx))
-- Nova seção "Nota mínima" entre "Década" e "Ordenar por", com chips no mesmo estilo dos de década: `6+  7+  8+`. Clicar no chip ativo limpa o filtro.
+- Nova seção "Nota mínima" entre "Década" e "Ordenar por", com chips no mesmo estilo dos de década: `6+  7+  8+  9+`. Clicar no chip ativo limpa o filtro.
 
-**Atalho na inicial** ([src/app/page.tsx](../../../src/app/page.tsx))
-- No cabeçalho do trilho "Mais bem avaliados no streaming", no lugar onde os outros trilhos mostram "Ver tudo", entram os chips `7+` e `8+`, que levam para `/catalogo?nota=7&ordem=nota` e `/catalogo?nota=8&ordem=nota`.
+**Barra de notas na inicial** ([src/app/page.tsx](../../../src/app/page.tsx))
+- A inicial é só para exibir, navegar e buscar: a barra **não filtra a inicial**, apenas leva ao Catálogo.
+- Barra "Explorar por nota" logo abaixo do destaque, antes do "Top 10 da semana", com chips `6+  7+  8+  9+`; cada um leva para `/catalogo?nota=X&ordem=nota`.
+- Substitui os chips pequenos que ficavam ao lado de "Mais bem avaliados no streaming" (revisão de 2026-11-16: passavam despercebidos).
 
 ```
-Mais bem avaliados no streaming   [7+] [8+]
-┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐
-│    │ │    │ │    │ │    │ │    │ ...
-└────┘ └────┘ └────┘ └────┘ └────┘
+[ destaque ]
+Explorar por nota   [6+] [7+] [8+] [9+]
+Top 10 da semana
+┌────┐ ┌────┐ ┌────┐ ...
 ```
 
 **Testes**
@@ -53,7 +55,7 @@ Mais bem avaliados no streaming   [7+] [8+]
 
 ## Decisões minhas (para conferir)
 
-- Valores 6/7/8: com 9+ e o piso de 100 votos sobram pouquíssimos filmes.
+- 9+ incluído a pedido do usuário, ciente de que com o piso de 100 votos sobram só 3 filmes (contagem de 2026-11-16: 6+ 10.787, 7+ 4.137, 8+ 325, 9+ 3).
 - Piso de 100 votos sempre que houver nota mínima.
 - Os atalhos da inicial já chegam ordenados por nota.
 

@@ -25,10 +25,10 @@ function renderPanel(filters: Filters) {
 describe('CatalogFilters — nota mínima', () => {
   beforeEach(() => push.mockClear())
 
-  it('mostra a seção Nota mínima com 6+, 7+ e 8+', () => {
+  it('mostra a seção Nota mínima com 6+, 7+, 8+ e 9+', () => {
     renderPanel(base)
     expect(screen.getByRole('heading', { name: 'Nota mínima' })).toBeInTheDocument()
-    for (const l of ['6+', '7+', '8+']) {
+    for (const l of ['6+', '7+', '8+', '9+']) {
       expect(screen.getByRole('button', { name: l })).toHaveAttribute('aria-pressed', 'false')
     }
   })
