@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { ReactNode } from 'react'
 import { PosterCard } from '@/components/PosterCard'
 import { Rail } from '@/components/Rail'
 import type { MovieCard } from '@/lib/tmdb/movies'
@@ -8,11 +9,14 @@ export function MovieRow({
   title,
   movies,
   href,
+  action,
   ranked = false,
 }: {
   title: string
   movies: MovieCard[]
   href?: string
+  /** Conteúdo ao lado do título quando não há "Ver tudo" (href). */
+  action?: ReactNode
   /** Top 10: numerais gigantes atrás do pôster, na ordem do ranking. */
   ranked?: boolean
 }) {
@@ -28,7 +32,7 @@ export function MovieRow({
           </h2>
         }
         action={
-          href && (
+          href ? (
             <Link
               href={href}
               className="group/more inline-flex items-center gap-0.5 text-sm font-medium text-accent/90 transition-colors hover:text-accent"
@@ -36,6 +40,8 @@ export function MovieRow({
               Ver tudo
               <ChevronRight className="h-4 w-4 transition-transform group-hover/more:translate-x-1" />
             </Link>
+          ) : (
+            action
           )
         }
       >

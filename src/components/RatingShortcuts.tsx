@@ -1,0 +1,21 @@
+import Link from 'next/link'
+import { buildCatalogUrl, parseCatalogFilters } from '@/lib/tmdb/catalog'
+
+/** Atalhos da inicial para o Catálogo filtrado por nota mínima e ordenado por nota. */
+export function RatingShortcuts({ ratings = [7, 8] }: { ratings?: number[] }) {
+  const defaults = parseCatalogFilters({})
+  return (
+    <div className="flex items-center gap-1.5">
+      {ratings.map((r) => (
+        <Link
+          key={r}
+          href={buildCatalogUrl({ ...defaults, minRating: r, sort: 'nota' })}
+          aria-label={`Filmes com nota ${r} ou mais`}
+          className="rounded-full border border-white/15 px-2.5 py-0.5 text-xs font-medium text-fg/80 transition-colors hover:border-accent/70 hover:text-accent"
+        >
+          {r}+
+        </Link>
+      ))}
+    </div>
+  )
+}

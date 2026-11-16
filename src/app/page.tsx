@@ -2,6 +2,7 @@ import { FavoriteButton } from '@/components/FavoriteButton'
 import { Hero } from '@/components/Hero'
 import { HeroCarousel } from '@/components/HeroCarousel'
 import { MovieRow } from '@/components/MovieRow'
+import { RatingShortcuts } from '@/components/RatingShortcuts'
 import { getFavoriteIds } from '@/lib/favorites'
 import { FEATURED_PROVIDERS } from '@/lib/providers'
 import { getCurrentUser } from '@/lib/supabase/server'
@@ -71,7 +72,11 @@ export default async function Home() {
 
       <div className={`relative z-10 ${heroes.length > 0 ? '-mt-28 sm:-mt-36' : ''}`}>
         <MovieRow title="Top 10 da semana" movies={trending} ranked />
-        <MovieRow title="Mais bem avaliados no streaming" movies={valueOr(topR)} />
+        <MovieRow
+          title="Mais bem avaliados no streaming"
+          movies={valueOr(topR)}
+          action={<RatingShortcuts />}
+        />
         {FEATURED_PROVIDERS.map((p, i) => (
           <MovieRow
             key={p.id}
